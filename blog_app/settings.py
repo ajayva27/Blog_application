@@ -13,9 +13,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from corsheaders.defaults import default_headers
 import os
 from pathlib import Path
-import dj_database_url
 
-PORT = os.getenv('PORT', '10000')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -107,18 +105,13 @@ WSGI_APPLICATION = "blog_app.wsgi.application"
 #     }
 # }
 
-if os.getenv('RENDER') == 'true':
-    DATABASES = {
-        'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
-    }
-else:
-    DATABASES = {
+DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': os.getenv('MYSQL_DATABASE', 'blog_db'),
         'USER': os.getenv('MYSQL_USER', 'blog_user'),
         'PASSWORD': os.getenv('MYSQL_PASSWORD', 'blog'),
-        'HOST': 'localhost',  
+        'HOST': 'db',  # Use 'db' if you're using Docker
         'PORT': '3306',
     }
 }
