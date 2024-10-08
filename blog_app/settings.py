@@ -118,7 +118,7 @@ else:
         'NAME': os.getenv('MYSQL_DATABASE', 'blog_db'),
         'USER': os.getenv('MYSQL_USER', 'blog_user'),
         'PASSWORD': os.getenv('MYSQL_PASSWORD', 'blog'),
-        'HOST': 'db',  # Use 'db' if you're using Docker
+        'HOST': 'localhost',  
         'PORT': '3306',
     }
 }
