@@ -1,0 +1,64 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}Edit Profile{% endblock %}
+
+{% block content %}
+{% load static %}
+<div class="container mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg">
+    <h2 class="text-4xl font-bold mb-6 text-center text-gray-800">Edit Your Profile</h2>
+    
+    <form method="POST" enctype="multipart/form-data" class="space-y-6" id="editProfileForm">
+        {% csrf_token %}
+        
+        <div class="flex items-center justify-center mb-6">
+            <img id="profile-pic-preview" class="w-32 h-32 rounded-full border-4 border-gray-300 shadow-lg" 
+                 src="{% if user.userprofile.profile_picture %}{{ user.userprofile.profile_picture.url }}{% else %}{% static 'image/default_pro_pic.jpeg' %}{% endif %}" 
+                 alt="Profile Picture">
+        </div>
+        
+        <div class="flex justify-center mb-4">
+            <button type="button" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-200" onclick="removeImage()">Remove Profile Picture</button>
+        </div>
+        
+        <input type="hidden" name="remove_picture" id="remove_picture" value="False">  
+
+        <div class="mb-4">
+            <label for="profile_picture" class="block mb-2 font-semibold text-gray-700">Change Profile Picture</label>
+            <input type="file" name="profile_picture" id="profile_picture" class="border border-gray-300 rounded-lg p-2 w-full text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" accept="image/*" onchange="previewImage(event)">
+        </div>
+
+        <div class="mb-4">
+            <label for="username" class="block mb-2 font-semibold text-gray-700">Username</label>
+            <input type="text" name="username" id="username" value="{{ user.username }}" class="border border-gray-300 rounded-lg p-2 w-full text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+        </div>
+        
+        <div class="mb-4">
+            <label for="email" class="block mb-2 font-semibold text-gray-700">Email</label>
+            <input type="email" name="email" id="email" value="{{ user.email }}" class="border border-gray-300 rounded-lg p-2 w-full text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+        </div>
+        
+        <button type="submit" class="w-full bg-blue-600 text-white font-semibold px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-200">Update Profile</button>
+    </form>
+</div>
+
+<!-- JavaScript to handle profile picture preview and removal -->
+<script>
+    // Function to preview the selected image
+    function previewImage(event) {
+        const reader = new FileReader();
+        reader.onload = function(){
+            const output = document.getElementById('profile-pic-preview');
+            output.src = reader.result;
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    }
+
+    // Function to remove the current profile picture
+    function removeImage() {
+        const defaultImage = "{% static 'image/default_pro_pic.jpeg' %}";
+        document.getElementById('profile-pic-preview').src = defaultImage;
+        document.getElementById('remove_picture').value = 'True';  
+        document.getElementById('profile_picture').value = ''; 
+    }
+</script>
+{% endblock %}

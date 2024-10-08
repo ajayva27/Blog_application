@@ -1,0 +1,51 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}Create Post{% endblock %}
+
+{% block content %}
+{% load static %}
+<div class="container mx-auto py-10">
+    <h1 class="text-4xl font-extrabold text-center mb-8 text-gray-900">Create a New Post</h1>
+    
+    <form id="createPostForm" class="bg-white shadow-lg rounded-lg p-8 max-w-xl mx-auto space-y-6" action="{% url 'create_post' %}" method="POST">
+        {% csrf_token %}
+
+        <!-- Display Messages -->
+        {% if messages %}
+            <div class="my-4">
+                {% for message in messages %}
+                    <div class="{% if message.tags == 'success' %}bg-green-100 text-green-800 border border-green-300{% else %}bg-red-100 text-red-800 border border-red-300{% endif %} rounded p-3 mb-2" role="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div class="mb-4">
+            <label for="{{ form.title.id_for_label }}" class="block text-lg font-medium text-gray-700 mb-2">{{ form.title.label }}</label>
+            <input type="text" name="title" id="{{ form.title.id_for_label }}" placeholder="Enter post title" value="{{ form.title.value|default:'' }}" class="block w-full border border-gray-300 rounded-md p-3 focus:border-gray-500 focus:ring focus:ring-gray-500 focus:ring-opacity-50">
+        </div>
+
+        <div class="mb-4">
+            <label for="{{ form.content.id_for_label }}" class="block text-lg font-medium text-gray-700 mb-2">{{ form.content.label }}</label>
+            <textarea id="postContent" name="content" rows="15" placeholder="Write your post content here..." class="block w-full border border-gray-300 rounded-md p-3 focus:border-gray-500 focus:ring focus:ring-gray-500 focus:ring-opacity-50 mb-6">{{ form.content.value|default:'' }}</textarea>
+        </div>
+
+        <div class="flex justify-center">
+            <button type="submit" class="bg-gray-600 text-white px-6 py-2 rounded-lg shadow-md hover:bg-gray-500 transition duration-200 text-lg font-semibold">Publish</button>
+        </div>
+    </form>
+</div>
+
+<!-- Include CKEditor 5 from CDN -->
+<script src="https://cdn.ckeditor.com/ckeditor5/39.0.0/classic/ckeditor.js"></script>
+<script>
+    // Initialize CKEditor
+    ClassicEditor
+        .create(document.querySelector('#postContent'))
+        .catch(error => {
+            console.error(error);
+        });
+</script>
+<script src="{% static 'js/create_post.js' %}"></script>
+{% endblock %}
